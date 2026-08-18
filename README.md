@@ -35,7 +35,7 @@ During testing across various models, we observed distinct behaviors:
 | Model Tier                                                                                                    | Behavior & Reliability                                                                                                                           | Recommendation                                                                                                           |
 |:--------------------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------|
 | **GitHub Copilot Free / "Auto" Mode** *(lightweight models like GPT-4o-mini)*                                 | **~30% failure rate.** Tends to hallucinate parameters, miss required fields, or call tools out of order.                                        | ❌ Not recommended for complex multi-slide generation.                                                                   |
-| **Frontier / Reasoning Models** *(Claude 3.7 / 3.5 Sonnet, GPT-4o, Google Antigravity / Gemini 3.7 Thinking)* | **~95–100% precision.** Flawlessly orchestrates multi-step tool calls, plans layout variety, formats cards, and applies cohesive color palettes. | ✅ **Strongly Recommended.** Switch your Copilot chat dropdown from **Auto** to **Claude 3.7/3.5 Sonnet** or **GPT-4o**. |
+| **Frontier / Reasoning Models** *(Claude 4.5 / 4.6 Sonnet, GPT-5, Google Antigravity / Gemini 3.7 Thinking)* | **~95–100% precision.** Flawlessly orchestrates multi-step tool calls, plans layout variety, formats cards, and applies cohesive color palettes. | ✅ **Strongly Recommended.** Switch your Copilot chat dropdown from **Auto** to **Claude 4.5/4.6 Sonnet** or **GPT-5**. |
 
 ### 🎯 Setting Realistic Expectations (What This Is & Isn't)
 
@@ -77,7 +77,7 @@ The server exposes 44 dedicated tools across 7 modular service domains:
 * **Java:** Java 25+ (tested on Java 25)
 * **Framework:** Spring Boot 4.1.x
 * **AI Protocol:** Spring AI MCP Server 2.0.0 (`spring-ai-starter-mcp-server-webmvc` / Streamable HTTP & SSE)
-* **PPT Engine:** Apache POI 5.4.x (`poi-ooxml`)
+* **PPT Engine:** Apache POI 5.5.x (`poi-ooxml`)
 * **Utilities:** Lombok, Maven Wrapper
 
 ---
