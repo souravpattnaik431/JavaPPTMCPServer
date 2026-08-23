@@ -595,6 +595,12 @@ public class StructuralElementService {
 
 
 
+    private static final Map<String, ShapeType> SHAPE_ALIASES = initShapeAliases();
+
+    private static Map<String, ShapeType> initShapeAliases() {
+        return Map.<String, ShapeType>ofEntries(Map.entry("rectangle", ShapeType.RECT), Map.entry("rect", ShapeType.RECT), Map.entry("square", ShapeType.RECT), Map.entry("round_rect", ShapeType.ROUND_RECT), Map.entry("rounded_rectangle", ShapeType.ROUND_RECT), Map.entry("round_rectangle", ShapeType.ROUND_RECT), Map.entry("ellipse", ShapeType.ELLIPSE), Map.entry("oval", ShapeType.ELLIPSE), Map.entry("circle", ShapeType.ELLIPSE), Map.entry("diamond", ShapeType.DIAMOND), Map.entry("triangle", ShapeType.TRIANGLE), Map.entry("isosceles_triangle", ShapeType.TRIANGLE), Map.entry("rt_triangle", ShapeType.RT_TRIANGLE), Map.entry("right_triangle", ShapeType.RT_TRIANGLE), Map.entry("right_angle_triangle", ShapeType.RT_TRIANGLE), Map.entry("parallelogram", ShapeType.PARALLELOGRAM), Map.entry("trapezoid", ShapeType.TRAPEZOID), Map.entry("pentagon", ShapeType.PENTAGON), Map.entry("hexagon", ShapeType.HEXAGON), Map.entry("heptagon", ShapeType.HEPTAGON), Map.entry("octagon", ShapeType.OCTAGON), Map.entry("decagon", ShapeType.DECAGON), Map.entry("dodecagon", ShapeType.DODECAGON), Map.entry("star", ShapeType.STAR_5), Map.entry("star_5", ShapeType.STAR_5), Map.entry("5_point_star", ShapeType.STAR_5), Map.entry("5_pointed_star", ShapeType.STAR_5), Map.entry("star_4", ShapeType.STAR_4), Map.entry("4_point_star", ShapeType.STAR_4), Map.entry("star_6", ShapeType.STAR_6), Map.entry("6_point_star", ShapeType.STAR_6), Map.entry("star_7", ShapeType.STAR_7), Map.entry("7_point_star", ShapeType.STAR_7), Map.entry("star_8", ShapeType.STAR_8), Map.entry("8_point_star", ShapeType.STAR_8), Map.entry("star_10", ShapeType.STAR_10), Map.entry("10_point_star", ShapeType.STAR_10), Map.entry("star_12", ShapeType.STAR_12), Map.entry("12_point_star", ShapeType.STAR_12), Map.entry("star_16", ShapeType.STAR_16), Map.entry("16_point_star", ShapeType.STAR_16), Map.entry("star_24", ShapeType.STAR_24), Map.entry("24_point_star", ShapeType.STAR_24), Map.entry("star_32", ShapeType.STAR_32), Map.entry("32_point_star", ShapeType.STAR_32), Map.entry("arrow", ShapeType.RIGHT_ARROW), Map.entry("right_arrow", ShapeType.RIGHT_ARROW), Map.entry("left_arrow", ShapeType.LEFT_ARROW), Map.entry("up_arrow", ShapeType.UP_ARROW), Map.entry("down_arrow", ShapeType.DOWN_ARROW), Map.entry("left_right_arrow", ShapeType.LEFT_RIGHT_ARROW), Map.entry("bidirectional_arrow", ShapeType.LEFT_RIGHT_ARROW), Map.entry("horizontal_arrow", ShapeType.LEFT_RIGHT_ARROW), Map.entry("up_down_arrow", ShapeType.UP_DOWN_ARROW), Map.entry("vertical_arrow", ShapeType.UP_DOWN_ARROW), Map.entry("quad_arrow", ShapeType.QUAD_ARROW), Map.entry("4_way_arrow", ShapeType.QUAD_ARROW), Map.entry("chevron", ShapeType.CHEVRON), Map.entry("cylinder", ShapeType.CAN), Map.entry("can", ShapeType.CAN), Map.entry("cube", ShapeType.CUBE), Map.entry("donut", ShapeType.DONUT), Map.entry("doughnut", ShapeType.DONUT), Map.entry("heart", ShapeType.HEART), Map.entry("lightning_bolt", ShapeType.LIGHTNING_BOLT), Map.entry("lightning", ShapeType.LIGHTNING_BOLT), Map.entry("cloud", ShapeType.CLOUD_CALLOUT), Map.entry("cloud_callout", ShapeType.CLOUD_CALLOUT), Map.entry("sun", ShapeType.SUN), Map.entry("moon", ShapeType.MOON), Map.entry("smiley", ShapeType.SMILEY_FACE), Map.entry("smiley_face", ShapeType.SMILEY_FACE), Map.entry("plus", ShapeType.PLUS), Map.entry("cross", ShapeType.PLUS), Map.entry("banner", ShapeType.RIBBON), Map.entry("ribbon", ShapeType.RIBBON), Map.entry("flow_process", ShapeType.FLOW_CHART_PROCESS), Map.entry("flowchart_process", ShapeType.FLOW_CHART_PROCESS), Map.entry("process", ShapeType.FLOW_CHART_PROCESS), Map.entry("flow_decision", ShapeType.FLOW_CHART_DECISION), Map.entry("flowchart_decision", ShapeType.FLOW_CHART_DECISION), Map.entry("decision", ShapeType.FLOW_CHART_DECISION), Map.entry("flow_document", ShapeType.FLOW_CHART_DOCUMENT), Map.entry("flowchart_document", ShapeType.FLOW_CHART_DOCUMENT), Map.entry("document", ShapeType.FLOW_CHART_DOCUMENT), Map.entry("flow_terminator", ShapeType.FLOW_CHART_TERMINATOR), Map.entry("flowchart_terminator", ShapeType.FLOW_CHART_TERMINATOR), Map.entry("terminator", ShapeType.FLOW_CHART_TERMINATOR), Map.entry("flow_data", ShapeType.FLOW_CHART_INPUT_OUTPUT), Map.entry("flow_input_output", ShapeType.FLOW_CHART_INPUT_OUTPUT), Map.entry("flowchart_input_output", ShapeType.FLOW_CHART_INPUT_OUTPUT));
+    }
+
     /**
      * Maps a shape name string to an Apache POI ShapeType enum value.
      * Supports common user-friendly aliases and dynamically resolves any of the 180+ Apache POI ShapeType enums.
@@ -608,57 +614,10 @@ public class StructuralElementService {
         }
         String s = stName.trim().toLowerCase().replace("-", "_").replace(" ", "_");
 
-        // 1. Check friendly aliases for common PowerPoint shapes
-        switch (s) {
-            case "rectangle", "rect", "square" -> { return ShapeType.RECT; }
-            case "round_rect", "rounded_rectangle", "round_rectangle" -> { return ShapeType.ROUND_RECT; }
-            case "ellipse", "oval", "circle" -> { return ShapeType.ELLIPSE; }
-            case "diamond" -> { return ShapeType.DIAMOND; }
-            case "triangle", "isosceles_triangle" -> { return ShapeType.TRIANGLE; }
-            case "rt_triangle", "right_triangle", "right_angle_triangle" -> { return ShapeType.RT_TRIANGLE; }
-            case "parallelogram" -> { return ShapeType.PARALLELOGRAM; }
-            case "trapezoid" -> { return ShapeType.TRAPEZOID; }
-            case "pentagon" -> { return ShapeType.PENTAGON; }
-            case "hexagon" -> { return ShapeType.HEXAGON; }
-            case "heptagon" -> { return ShapeType.HEPTAGON; }
-            case "octagon" -> { return ShapeType.OCTAGON; }
-            case "decagon" -> { return ShapeType.DECAGON; }
-            case "dodecagon" -> { return ShapeType.DODECAGON; }
-            case "star", "star_5", "5_point_star", "5_pointed_star" -> { return ShapeType.STAR_5; }
-            case "star_4", "4_point_star" -> { return ShapeType.STAR_4; }
-            case "star_6", "6_point_star" -> { return ShapeType.STAR_6; }
-            case "star_7", "7_point_star" -> { return ShapeType.STAR_7; }
-            case "star_8", "8_point_star" -> { return ShapeType.STAR_8; }
-            case "star_10", "10_point_star" -> { return ShapeType.STAR_10; }
-            case "star_12", "12_point_star" -> { return ShapeType.STAR_12; }
-            case "star_16", "16_point_star" -> { return ShapeType.STAR_16; }
-            case "star_24", "24_point_star" -> { return ShapeType.STAR_24; }
-            case "star_32", "32_point_star" -> { return ShapeType.STAR_32; }
-            case "arrow", "right_arrow" -> { return ShapeType.RIGHT_ARROW; }
-            case "left_arrow" -> { return ShapeType.LEFT_ARROW; }
-            case "up_arrow" -> { return ShapeType.UP_ARROW; }
-            case "down_arrow" -> { return ShapeType.DOWN_ARROW; }
-            case "left_right_arrow", "bidirectional_arrow", "horizontal_arrow" -> { return ShapeType.LEFT_RIGHT_ARROW; }
-            case "up_down_arrow", "vertical_arrow" -> { return ShapeType.UP_DOWN_ARROW; }
-            case "quad_arrow", "4_way_arrow" -> { return ShapeType.QUAD_ARROW; }
-            case "chevron" -> { return ShapeType.CHEVRON; }
-            case "cylinder", "can" -> { return ShapeType.CAN; }
-            case "cube" -> { return ShapeType.CUBE; }
-            case "donut", "doughnut" -> { return ShapeType.DONUT; }
-            case "heart" -> { return ShapeType.HEART; }
-            case "lightning_bolt", "lightning" -> { return ShapeType.LIGHTNING_BOLT; }
-            case "cloud", "cloud_callout" -> { return ShapeType.CLOUD_CALLOUT; }
-            case "sun" -> { return ShapeType.SUN; }
-            case "moon" -> { return ShapeType.MOON; }
-            case "smiley", "smiley_face" -> { return ShapeType.SMILEY_FACE; }
-            case "plus", "cross" -> { return ShapeType.PLUS; }
-            case "banner", "ribbon" -> { return ShapeType.RIBBON; }
-            case "flow_process", "flowchart_process", "process" -> { return ShapeType.FLOW_CHART_PROCESS; }
-            case "flow_decision", "flowchart_decision", "decision" -> { return ShapeType.FLOW_CHART_DECISION; }
-            case "flow_document", "flowchart_document", "document" -> { return ShapeType.FLOW_CHART_DOCUMENT; }
-            case "flow_terminator", "flowchart_terminator", "terminator" -> { return ShapeType.FLOW_CHART_TERMINATOR; }
-            case "flow_data", "flow_input_output", "flowchart_input_output" -> { return ShapeType.FLOW_CHART_INPUT_OUTPUT; }
-            default -> { }
+        // 1. Check friendly aliases map
+        ShapeType mapped = SHAPE_ALIASES.get(s);
+        if (mapped != null) {
+            return mapped;
         }
 
         // 2. Dynamic lookup across all 180+ Apache POI ShapeType enum constants
