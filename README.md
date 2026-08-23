@@ -64,7 +64,7 @@ The server exposes 44 dedicated tools across 7 modular service domains:
 ├── 1. Presentation Lifecycle (9 tools)      → Create, open from template, merge, export Base64, save, switch active decks
 ├── 2. Slide Content & Media (11 tools)       → Add slides, rich text formatting, local images, hyperlinks, speaker notes
 ├── 3. Custom Layout Templates (5 tools)     → Executive KPI metric cards, comparison cards, sequential roadmap flows
-├── 4. Structural Elements & Tables (6 tools) → Multi-row tables, cell borders/colors, text alignment, shape connectors
+├── 4. Structural Elements & Shapes (6 tools) → 180+ vector shapes (cylinders/databases, 3D cubes, clouds, chevrons, stars, flowcharts), tables, connectors
 ├── 5. Design & Theming (5 tools)            → Gradient backgrounds, corporate color themes, headers/footers, slide numbers
 ├── 6. Guardrails & Quality Audits (5 tools) → Density checks, placeholder detection, canvas overflow audit, auto-fix
 └── 7. Slide Rendering & Preview (3 tools)   → High-res PNG/JPEG slide rendering (960x540 / 1440x810) for visual feedback
@@ -176,6 +176,9 @@ To connect Claude Desktop to your local Java MCP server:
 > 2. **Leverages Apache POI Fidelity:** Ensures slides are constructed with native OOXML shape precision, theme palettes, and executive layouts rather than generic script outputs.
 > 3. **Enables Real-Time Auto-Save:** Automatically persists the deck directly into your active workspace and runs quality audit guardrails in the background.
 
+* **🏗️ Architecture Diagram & System Flow (Shapes & Connectors):**
+  > *"Using the java ppt mcp server, create a technical presentation titled 'Microservices Cloud Architecture'. On slide 2, build a full architecture diagram using native PowerPoint shapes: place a cloud shape for 'API Gateway / Client' on the left, 3 rounded rectangles for 'Auth Service', 'Order Service', and 'Payment Service' in the middle, a cylinder (can) shape for 'PostgreSQL Primary' and a 3D cube for 'Redis Cache' on the right. Connect each service to the database and cache using connector lines, style with executive navy and slate tones with bold white text labels, and save the presentation."*
+
 * **Executive KPI Deck:**
   > *"Using the java ppt mcp server, create an executive quarterly business review deck. Include a title slide, a 4-card KPI metric dashboard, an architecture split-screen slide, and a 4-step rollout roadmap."*
 * **Technology Comparison:**
@@ -191,6 +194,7 @@ To connect Claude Desktop to your local Java MCP server:
 
 The repository includes an extensive JUnit 5 & Spring Boot test suite covering all 44 tools and end-to-end slide generation pipelines:
 
+* **`StructuralElementServiceTest`:** Validates vector auto-shape creation across 21+ shape types, aliases, and Apache POI `ShapeType` enum constants (e.g. `cylinder`/`can`, `cube`, `donut`, `trapezoid`, `chevron`, `star_8`, `flow_process`, `SNIP_2_DIAG_RECT`), generating `test_output/Shapes_Showcase.pptx` and `test_output/shapes_showcase_preview.png`.
 * **`AutoSaveAndDefaultLocationTest`:** Validates atomic presentation creation, auto-saving directly to active client workspace roots, and title-based auto-renaming.
 * **`GuardrailServiceTest`:** Tests quality auditing, visual density scoring, contrast compliance, and auto-fix remediation.
 * **`PptServicesIntegrationTest`:** Tests table manipulation, custom shape connectors, typography styling, gradients, and hyperlinks.

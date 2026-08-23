@@ -345,11 +345,11 @@ public class StructuralElementService {
      * @param bold           Bold flag.
      * @return Map with shapeName and status.
      */
-    @McpTool(name = "add_shape", description = "Add a geometric shape (rectangle, round_rect, ellipse, diamond, triangle, arrow, star, heart, etc.) with custom fill, border, and optional text.")
+    @McpTool(name = "add_shape", description = "Add any geometric PowerPoint shape (rectangle, round_rect, ellipse, diamond, triangle, trapezoid, chevron, cube, cylinder/can, donut, star_4..32, arrows, heart, banners, callouts, flowchart shapes, etc.) with custom fill, border, and optional text.")
     public Map<String, Object> addShape(
             @McpToolParam(description = "Presentation ID (optional, defaults to active presentation)", required = false) String presentationId,
             @McpToolParam(description = "0-based slide index") int slideIndex,
-            @McpToolParam(description = "Shape type name (e.g. 'rectangle', 'round_rect', 'ellipse', 'diamond', 'triangle', 'arrow', 'star', 'heart', 'cloud')") String shapeType,
+            @McpToolParam(description = "Shape type name or POI ShapeType enum (e.g. 'rectangle', 'round_rect', 'ellipse', 'diamond', 'triangle', 'trapezoid', 'chevron', 'cube', 'cylinder', 'donut', 'star_5', 'right_arrow', 'heart', 'cloud', 'flow_process', etc.)") String shapeType,
             @McpToolParam(description = "X position in points (default: 100)", required = false) Double x,
             @McpToolParam(description = "Y position in points (default: 100)", required = false) Double y,
             @McpToolParam(description = "Width in points (default: 200)", required = false) Double width,
@@ -597,33 +597,76 @@ public class StructuralElementService {
 
     /**
      * Maps a shape name string to an Apache POI ShapeType enum value.
+     * Supports common user-friendly aliases and dynamically resolves any of the 180+ Apache POI ShapeType enums.
      *
-     * @param stName The shape type name string (e.g. 'rectangle', 'round_rect', 'ellipse', 'star', etc.).
-     * @return The corresponding ShapeType, default is RECT.
+     * @param stName The shape type name string (e.g. 'rectangle', 'round_rect', 'ellipse', 'star', 'trapezoid', 'chevron', 'can', 'cube', etc.).
+     * @return The corresponding ShapeType, defaulting to RECT if unmapped.
      */
     private ShapeType mapShapeType(String stName) {
-        if (stName == null) return ShapeType.RECT;
-        String s = stName.trim().toLowerCase().replace("-", "_");
-        return switch (s) {
-            case "round_rect", "rounded_rectangle", "round_rectangle" -> ShapeType.ROUND_RECT;
-            case "ellipse", "oval", "circle" -> ShapeType.ELLIPSE;
-            case "diamond" -> ShapeType.DIAMOND;
-            case "triangle", "isosceles_triangle" -> ShapeType.TRIANGLE;
-            case "rt_triangle", "right_triangle" -> ShapeType.RT_TRIANGLE;
-            case "pentagon" -> ShapeType.PENTAGON;
-            case "hexagon" -> ShapeType.HEXAGON;
-            case "octagon" -> ShapeType.OCTAGON;
-            case "star", "star_5", "5_point_star" -> ShapeType.STAR_5;
-            case "arrow", "right_arrow" -> ShapeType.RIGHT_ARROW;
-            case "left_arrow" -> ShapeType.LEFT_ARROW;
-            case "up_arrow" -> ShapeType.UP_ARROW;
-            case "down_arrow" -> ShapeType.DOWN_ARROW;
-            case "heart" -> ShapeType.HEART;
-            case "lightning_bolt", "lightning" -> ShapeType.LIGHTNING_BOLT;
-            case "cloud", "cloud_callout" -> ShapeType.CLOUD_CALLOUT;
-            case "flow_process", "flowchart_process" -> ShapeType.FLOW_CHART_PROCESS;
-            case "flow_decision", "flowchart_decision" -> ShapeType.FLOW_CHART_DECISION;
-            default -> ShapeType.RECT;
-        };
+        if (stName == null || stName.trim().isEmpty()) {
+            return ShapeType.RECT;
+        }
+        String s = stName.trim().toLowerCase().replace("-", "_").replace(" ", "_");
+
+        // 1. Check friendly aliases for common PowerPoint shapes
+        switch (s) {
+            case "rectangle", "rect", "square" -> { return ShapeType.RECT; }
+            case "round_rect", "rounded_rectangle", "round_rectangle" -> { return ShapeType.ROUND_RECT; }
+            case "ellipse", "oval", "circle" -> { return ShapeType.ELLIPSE; }
+            case "diamond" -> { return ShapeType.DIAMOND; }
+            case "triangle", "isosceles_triangle" -> { return ShapeType.TRIANGLE; }
+            case "rt_triangle", "right_triangle", "right_angle_triangle" -> { return ShapeType.RT_TRIANGLE; }
+            case "parallelogram" -> { return ShapeType.PARALLELOGRAM; }
+            case "trapezoid" -> { return ShapeType.TRAPEZOID; }
+            case "pentagon" -> { return ShapeType.PENTAGON; }
+            case "hexagon" -> { return ShapeType.HEXAGON; }
+            case "heptagon" -> { return ShapeType.HEPTAGON; }
+            case "octagon" -> { return ShapeType.OCTAGON; }
+            case "decagon" -> { return ShapeType.DECAGON; }
+            case "dodecagon" -> { return ShapeType.DODECAGON; }
+            case "star", "star_5", "5_point_star", "5_pointed_star" -> { return ShapeType.STAR_5; }
+            case "star_4", "4_point_star" -> { return ShapeType.STAR_4; }
+            case "star_6", "6_point_star" -> { return ShapeType.STAR_6; }
+            case "star_7", "7_point_star" -> { return ShapeType.STAR_7; }
+            case "star_8", "8_point_star" -> { return ShapeType.STAR_8; }
+            case "star_10", "10_point_star" -> { return ShapeType.STAR_10; }
+            case "star_12", "12_point_star" -> { return ShapeType.STAR_12; }
+            case "star_16", "16_point_star" -> { return ShapeType.STAR_16; }
+            case "star_24", "24_point_star" -> { return ShapeType.STAR_24; }
+            case "star_32", "32_point_star" -> { return ShapeType.STAR_32; }
+            case "arrow", "right_arrow" -> { return ShapeType.RIGHT_ARROW; }
+            case "left_arrow" -> { return ShapeType.LEFT_ARROW; }
+            case "up_arrow" -> { return ShapeType.UP_ARROW; }
+            case "down_arrow" -> { return ShapeType.DOWN_ARROW; }
+            case "left_right_arrow", "bidirectional_arrow", "horizontal_arrow" -> { return ShapeType.LEFT_RIGHT_ARROW; }
+            case "up_down_arrow", "vertical_arrow" -> { return ShapeType.UP_DOWN_ARROW; }
+            case "quad_arrow", "4_way_arrow" -> { return ShapeType.QUAD_ARROW; }
+            case "chevron" -> { return ShapeType.CHEVRON; }
+            case "cylinder", "can" -> { return ShapeType.CAN; }
+            case "cube" -> { return ShapeType.CUBE; }
+            case "donut", "doughnut" -> { return ShapeType.DONUT; }
+            case "heart" -> { return ShapeType.HEART; }
+            case "lightning_bolt", "lightning" -> { return ShapeType.LIGHTNING_BOLT; }
+            case "cloud", "cloud_callout" -> { return ShapeType.CLOUD_CALLOUT; }
+            case "sun" -> { return ShapeType.SUN; }
+            case "moon" -> { return ShapeType.MOON; }
+            case "smiley", "smiley_face" -> { return ShapeType.SMILEY_FACE; }
+            case "plus", "cross" -> { return ShapeType.PLUS; }
+            case "banner", "ribbon" -> { return ShapeType.RIBBON; }
+            case "flow_process", "flowchart_process", "process" -> { return ShapeType.FLOW_CHART_PROCESS; }
+            case "flow_decision", "flowchart_decision", "decision" -> { return ShapeType.FLOW_CHART_DECISION; }
+            case "flow_document", "flowchart_document", "document" -> { return ShapeType.FLOW_CHART_DOCUMENT; }
+            case "flow_terminator", "flowchart_terminator", "terminator" -> { return ShapeType.FLOW_CHART_TERMINATOR; }
+            case "flow_data", "flow_input_output", "flowchart_input_output" -> { return ShapeType.FLOW_CHART_INPUT_OUTPUT; }
+            default -> { }
+        }
+
+        // 2. Dynamic lookup across all 180+ Apache POI ShapeType enum constants
+        try {
+            return ShapeType.valueOf(s.toUpperCase());
+        } catch (IllegalArgumentException _) {
+            log.warn("Unknown shape type '{}', defaulting to RECT", stName);
+            return ShapeType.RECT;
+        }
     }
 }
